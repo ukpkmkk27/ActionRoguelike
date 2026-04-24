@@ -3,6 +3,9 @@
 
 #include "Characters/LHeroCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+#include "LDebugHelper.h"
 
 ALHeroCharacter::ALHeroCharacter()
 {
@@ -26,6 +29,7 @@ ALHeroCharacter::ALHeroCharacter()
 
 
 }
+
 void ALHeroCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -67,6 +71,7 @@ void ALHeroCharacter::MoveRight(float Value)
 
 	}
 }
+
 void ALHeroCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
@@ -77,5 +82,14 @@ void ALHeroCharacter::Turn(float Value)
 	AddControllerYawInput(Value);
 }
 
+void ALHeroCharacter::Jump()
+{
+	Super::Jump();
+}
+
+void ALHeroCharacter::StopJumping()
+{
+	Super::StopJumping();
+}
 
 

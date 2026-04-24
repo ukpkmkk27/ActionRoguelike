@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "LBaseCharacter.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
-
 #include "LHeroCharacter.generated.h"
 
-
+class USpringArmComponent;
+class UCameraComponent;
 /**
  * 
  */
@@ -38,8 +36,8 @@ protected:
 	void LookUp(float Value);
 
 	// Control Hero Jump
-	//virtual void Jump() override;
-	//virtual void StopJumping() override;
+	virtual void Jump() override;
+	virtual void StopJumping() override;
 
 
 };
