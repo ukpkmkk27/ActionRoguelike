@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "LBaseCharacter.h"
+
 #include "LHeroCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
+class ULDataAsset_InputConfig;
+struct FInputActionValue;
 /**
  * 
  */
@@ -19,25 +22,31 @@ public:
 	ALHeroCharacter();
 
 protected:
+#pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	USpringArmComponent* CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* FollowCamera;
 
+#pragma endregion
+
+#pragma region Input
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	ULDataAsset_InputConfig* InputConfigDataAsset;
+
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_Look(const FInputActionValue& InputActionValue);
+	void Input_Jump(const FInputActionValue& InputActionValue);
+
+
+#pragma endregion
+
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Move X and Y
-	void MoveForward(float Value);
-	void MoveRight(float Value);
 
-	// Control View Direction
-	void Turn(float Value);
-	void LookUp(float Value);
-
-	// Control Hero Jump
-	virtual void Jump() override;
-	virtual void StopJumping() override;
 
 
 };

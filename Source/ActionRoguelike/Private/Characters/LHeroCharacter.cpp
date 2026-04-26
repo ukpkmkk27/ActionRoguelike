@@ -5,6 +5,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "DataAssets/Input/LDataAsset_InputConfig.h"
+#include "Components/Input/LInputComponent.h"
+#include "LGameplayTags.h"
+
 #include "LDebugHelper.h"
 
 ALHeroCharacter::ALHeroCharacter()
@@ -30,66 +35,71 @@ ALHeroCharacter::ALHeroCharacter()
 
 }
 
-void ALHeroCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ALHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	// Bind Axis 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ALHeroCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ALHeroCharacter::MoveRight);
-	PlayerInputComponent->BindAxis("LookUp", this, &ALHeroCharacter::LookUp);
-	PlayerInputComponent->BindAxis("Turn", this, &ALHeroCharacter::Turn);
-	// Bind Action
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ALHeroCharacter::Jump);
-	PlayerInputComponent->BindAction("Jump",IE_Released, this, &ALHeroCharacter::StopJumping);
+	checkf(InputConfigDataAsset,TEXT("Forgot to assign a valid data asset to input config."))
+
+	ULocalPlayer* LocalPlayer = GetController<APlayerController>()->GetLocalPlayer();
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+
+	check(Subsystem);
+	Subsystem->AddMappingContext(InputConfigDataAsset->DefaultInputMappingContext, 0);
+
+	ULInputComponent* LInputComponent =  CastChecked<ULInputComponent>(PlayerInputComponent);
+	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Move);
+	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Look);
+	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Jump, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Jump);
+	
+
 
 }
 
-void ALHeroCharacter::MoveForward(float Value)
+
+
+void ALHeroCharacter::Input_Move(const FInputActionValue& InputActionValue)
 {
-	if (Controller != nullptr && Value != 0.0f)
+	
+	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
+	const FRotator YawRotation = FRotator(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
+	
+	if (MovementVector.Y != 0)
 	{
-		FRotator Rotation = Controller->GetControlRotation();
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		
+		AddMovementInput(ForwardDirection, MovementVector.Y);
 
-		const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		AddMovementInput(Direction, Value);
-
+	}
+	if (MovementVector.X != 0)
+	{
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(RightDirection, MovementVector.X);
 	}
 }
 
-void ALHeroCharacter::MoveRight(float Value)
+void ALHeroCharacter::Input_Look(const FInputActionValue& InputActionValue)
 {
-	if (Controller != nullptr && Value != 0.0f)
+	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
+	if (LookAxisVector.X != 0)
 	{
-		FRotator Rotation = Controller->GetControlRotation();
 
-		const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddControllerYawInput(LookAxisVector.X);
 
-		AddMovementInput(Direction, Value);
-
+	}
+	if (LookAxisVector.Y != 0)
+	{
+		AddControllerPitchInput(-LookAxisVector.Y);
 	}
 }
 
-void ALHeroCharacter::LookUp(float Value)
+void ALHeroCharacter::Input_Jump(const FInputActionValue& InputActionValue)
 {
-	AddControllerPitchInput(Value);
+	bool bIsJump = InputActionValue.Get<bool>();
+	if (bIsJump)
+	{
+		Jump();
+	}
 }
 
-void ALHeroCharacter::Turn(float Value)
-{
-	AddControllerYawInput(Value);
-}
-
-void ALHeroCharacter::Jump()
-{
-	Super::Jump();
-}
-
-void ALHeroCharacter::StopJumping()
-{
-	Super::StopJumping();
-}
 
 

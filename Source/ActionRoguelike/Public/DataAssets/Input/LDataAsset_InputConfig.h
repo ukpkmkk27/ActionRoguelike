@@ -35,6 +35,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (TitleProperty= "GameplayTag"))
 	TArray<FLInputConfig> NativeInputActions;
 
-	UInputAction* FindNativeActionByTag(const FGameplayTag& InGameplayTag);
+	UInputAction* FindNativeActionByTag(const FGameplayTag& InGameplayTag) const;
 
 };
