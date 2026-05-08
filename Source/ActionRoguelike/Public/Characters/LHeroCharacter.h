@@ -22,6 +22,10 @@ public:
 	ALHeroCharacter();
 
 protected:
+	//~ Begin APawn Interface.
+	virtual void PossessedBy(AController* NewController) override;
+	//~ End APawn Interface
+
 #pragma region Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	USpringArmComponent* CameraBoom;
@@ -35,11 +39,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	ULDataAsset_InputConfig* InputConfigDataAsset;
-
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_Jump(const FInputActionValue& InputActionValue);
-
+	void Input_Interact(const FInputActionValue& InputActionValue);
 
 #pragma endregion
 

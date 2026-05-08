@@ -8,7 +8,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "DataAssets/Input/LDataAsset_InputConfig.h"
 #include "Components/Input/LInputComponent.h"
+#include "Interfaces/LInteractInterface.h"
 #include "LGameplayTags.h"
+#include "AbilitySystem/LAbilitySystemComponent.h"
+#include "DrawDebugHelpers.h"
 
 #include "LDebugHelper.h"
 
@@ -31,7 +34,7 @@ ALHeroCharacter::ALHeroCharacter()
 	//
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
-
+	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 
 }
 
@@ -50,12 +53,23 @@ void ALHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Move);
 	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Look);
 	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Jump, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Jump);
+	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Interact, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Interact);
 	
 
 
 }
 
 
+void ALHeroCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	if (LAbilitySystemComponent && LAttributeSet)
+	{
+		const FString ASCText = FString::Printf(TEXT("OwnerActor: %s, AvatarActor: %s"), *LAbilitySystemComponent->GetOwnerActor()->GetActorLabel(), *LAbilitySystemComponent->GetAvatarActor()->GetActorLabel());
+		Debug::Print(TEXT("AbilitySystemComponent valid." + ASCText), FColor::Green);
+		Debug::Print(TEXT("AttributeSet valid." + ASCText), FColor::Green);
+	}
+}
 
 void ALHeroCharacter::Input_Move(const FInputActionValue& InputActionValue)
 {
@@ -98,6 +112,38 @@ void ALHeroCharacter::Input_Jump(const FInputActionValue& InputActionValue)
 	if (bIsJump)
 	{
 		Jump();
+	}
+}
+
+void ALHeroCharacter::Input_Interact(const FInputActionValue& InputActionValue)
+{
+	bool bIsInteract = InputActionValue.Get<bool>();
+	if (bIsInteract)
+	{
+		APlayerController* PC = GetController<APlayerController>();
+		if (PC)
+		{
+			int32 Width, Height;
+			PC->GetViewportSize(Width, Height);
+			FVector StartLocation, StartDirection;
+			bool bPoject = PC->DeprojectScreenPositionToWorld(Width / 2.0f, Height / 2.0f, StartLocation, StartDirection);
+			FVector EndLocation = StartLocation + StartDirection * 1000;
+
+			FHitResult HitResult;
+			FCollisionQueryParams QueryParams;
+			QueryParams.AddIgnoredActor(this);
+			GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, QueryParams);
+			if (AActor* HitActor =  HitResult.GetActor())
+			{
+				if (HitActor->Implements<ULInteractInterface>())
+				{
+					ILInteractInterface::Execute_Interact(HitActor, this);
+				}
+			}
+
+		}
+
+
 	}
 }
 
