@@ -13,6 +13,8 @@ enum class ELAbilityActivationPolicy : uint8
 	OnGiven
 };
 
+
+class UPawnCombatComponent;
 /**
  * 
  */
@@ -29,5 +31,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,Category = "LAbility")
 	ELAbilityActivationPolicy AbilityActivationPolicy = ELAbilityActivationPolicy::OnTriggered;
+
+	UFUNCTION(BlueprintPure, Category = "L|Combat")
+	UPawnCombatComponent* GetPawnCombatComponentFromActorInfo() const;
 	
 };

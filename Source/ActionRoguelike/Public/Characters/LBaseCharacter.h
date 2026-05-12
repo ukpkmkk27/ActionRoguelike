@@ -10,6 +10,7 @@
 
 class ULAbilitySystemComponent;
 class ULAttributeSet;
+class ULDataAsset_StartUpDataBase;
 
 UCLASS()
 class ACTIONROGUELIKE_API ALBaseCharacter : public ACharacter, public IAbilitySystemInterface
@@ -20,7 +21,7 @@ public:
 	
 	ALBaseCharacter();
 	//~ Begin IAbilitySystemInterface Interface.
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ End IAbilitySystemInterface Interface
 
 
@@ -32,6 +33,10 @@ protected:
 	ULAbilitySystemComponent* LAbilitySystemComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ULAttributeSet* LAttributeSet;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
+	TSoftObjectPtr<ULDataAsset_StartUpDataBase> CharacterStartUpData;
+
 public:
 	FORCEINLINE ULAbilitySystemComponent* GetLAbilitySystemComponent() const { return LAbilitySystemComponent; }
 	FORCEINLINE ULAttributeSet* GetLAttributeSet() const { return LAttributeSet; }

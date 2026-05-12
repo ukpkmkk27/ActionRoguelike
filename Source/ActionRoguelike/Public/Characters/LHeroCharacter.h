@@ -9,6 +9,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UHeroCombatComponent;
 class ULDataAsset_InputConfig;
 struct FInputActionValue;
 /**
@@ -33,6 +34,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	UHeroCombatComponent* HeroCombatComponent;
+
 #pragma endregion
 
 #pragma region Input
@@ -46,6 +50,7 @@ protected:
 
 #pragma endregion
 
+	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

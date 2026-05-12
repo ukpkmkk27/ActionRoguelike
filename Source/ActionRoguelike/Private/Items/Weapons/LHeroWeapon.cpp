@@ -3,3 +3,8 @@
 
 #include "Items/Weapons/LHeroWeapon.h"
 
+
+ALHeroWeapon::ALHeroWeapon()
+{
+
+}

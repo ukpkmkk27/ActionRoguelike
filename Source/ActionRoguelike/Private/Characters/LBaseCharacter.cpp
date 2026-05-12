@@ -8,7 +8,7 @@
 ALBaseCharacter::ALBaseCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 	GetMesh()->bReceivesDecals = false;
 
@@ -30,5 +30,6 @@ void ALBaseCharacter::PossessedBy(AController* NewController)
 	if (LAbilitySystemComponent)
 	{
 		LAbilitySystemComponent->InitAbilityActorInfo(this, this);
+		//ensureMsgf(!CharacterStartUpData.IsNull(), TEXT("Forget to assign Character StartUp Data: %s"), *GetName());
 	}
 }

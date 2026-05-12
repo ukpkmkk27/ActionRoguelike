@@ -11,8 +11,10 @@
 #include "Interfaces/LInteractInterface.h"
 #include "LGameplayTags.h"
 #include "AbilitySystem/LAbilitySystemComponent.h"
-#include "DrawDebugHelpers.h"
+#include "DataAssets/StartUp/LDataAsset_HeroStartUpData.h"
+#include "Components/Combat/HeroCombatComponent.h"
 
+#include "DrawDebugHelpers.h"
 #include "LDebugHelper.h"
 
 ALHeroCharacter::ALHeroCharacter()
@@ -27,7 +29,7 @@ ALHeroCharacter::ALHeroCharacter()
 	CameraBoom->bUsePawnControlRotation = true;
 
 	// Created and Fixed Camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
@@ -35,6 +37,10 @@ ALHeroCharacter::ALHeroCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+
+	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
+
+
 
 }
 
@@ -56,19 +62,25 @@ void ALHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Interact, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Interact);
 	
 
-
 }
 
 
 void ALHeroCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	if (LAbilitySystemComponent && LAttributeSet)
+	if (!CharacterStartUpData.IsNull())
 	{
-		const FString ASCText = FString::Printf(TEXT("OwnerActor: %s, AvatarActor: %s"), *LAbilitySystemComponent->GetOwnerActor()->GetActorLabel(), *LAbilitySystemComponent->GetAvatarActor()->GetActorLabel());
-		Debug::Print(TEXT("AbilitySystemComponent valid." + ASCText), FColor::Green);
-		Debug::Print(TEXT("AttributeSet valid." + ASCText), FColor::Green);
+		if (ULDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
+		{
+			LoadedData->GiveToAbilitySystemComponent(LAbilitySystemComponent);
+		}
 	}
+	//if (LAbilitySystemComponent && LAttributeSet)
+	//{
+	//	const FString ASCText = FString::Printf(TEXT("OwnerActor: %s, AvatarActor: %s"), *LAbilitySystemComponent->GetOwnerActor()->GetActorLabel(), *LAbilitySystemComponent->GetAvatarActor()->GetActorLabel());
+	//	Debug::Print(TEXT("AbilitySystemComponent valid." + ASCText), FColor::Green);
+	//	Debug::Print(TEXT("AttributeSet valid." + ASCText), FColor::Green);
+	//}
 }
 
 void ALHeroCharacter::Input_Move(const FInputActionValue& InputActionValue)
