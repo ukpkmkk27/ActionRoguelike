@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "LBaseCharacter.h"
-
+#include "GameplayTagContainer.h"
 #include "LHeroCharacter.generated.h"
 
 class USpringArmComponent;
@@ -48,12 +48,13 @@ protected:
 	void Input_Jump(const FInputActionValue& InputActionValue);
 	void Input_Interact(const FInputActionValue& InputActionValue);
 
+	void Input_AbilityPressed(FGameplayTag InInputTag);
+	void Input_AbilityReleased(FGameplayTag InInputTag);
 #pragma endregion
 
-	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+public:
+	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
 
 
 

@@ -20,6 +20,10 @@ public:
 
 	template<class UserObject, typename CallbackFunc>
 	void BindNativeInputAction(const ULDataAsset_InputConfig* InInputConfig, const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallbackFunc Func);
+	
+	template<class UserObject, typename CallbackFunc>
+	void BindAbilityInputAction(const ULDataAsset_InputConfig* InInputConfig,UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc);
+
 };
 
 template<class UserObject, typename CallbackFunc>
@@ -30,6 +34,21 @@ inline void ULInputComponent::BindNativeInputAction(const ULDataAsset_InputConfi
 	if (UInputAction* FoundAction = InInputConfig->FindNativeActionByTag(InInputTag))
 	{
 		BindAction(FoundAction, TriggerEvent, ContextObject, Func);
+	}
+
+}
+
+template<class UserObject, typename CallbackFunc>
+inline void ULInputComponent::BindAbilityInputAction(const ULDataAsset_InputConfig* InInputConfig, UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
+{
+	checkf(InInputConfig, TEXT("InputConfig Is Null, Can Not Process With Binding"));
+
+	for (const FLInputConfig& AbilityInputConfig : InInputConfig->GameAbilityInputActions)
+	{
+		if (!AbilityInputConfig.IsValid()) continue;
+		BindAction(AbilityInputConfig.InputAction, ETriggerEvent::Started, ContextObject, InputPressedFunc, AbilityInputConfig.GameplayTag);
+		BindAction(AbilityInputConfig.InputAction, ETriggerEvent::Completed, ContextObject, InputReleasedFunc, AbilityInputConfig.GameplayTag);
+
 	}
 
 }

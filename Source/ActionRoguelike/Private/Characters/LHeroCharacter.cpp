@@ -61,7 +61,7 @@ void ALHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Jump, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Jump);
 	LInputComponent->BindNativeInputAction(InputConfigDataAsset, LGamePlayTags::InputTag_Interact, ETriggerEvent::Triggered, this, &ALHeroCharacter::Input_Interact);
 	
-
+	LInputComponent->BindAbilityInputAction(InputConfigDataAsset, this, &ALHeroCharacter::Input_AbilityPressed, &ALHeroCharacter::Input_AbilityReleased);
 }
 
 
@@ -157,6 +157,16 @@ void ALHeroCharacter::Input_Interact(const FInputActionValue& InputActionValue)
 
 
 	}
+}
+
+void ALHeroCharacter::Input_AbilityPressed(FGameplayTag InInputTag)
+{
+	LAbilitySystemComponent->OnAbilityInputPressed(InInputTag);
+}
+
+void ALHeroCharacter::Input_AbilityReleased(FGameplayTag InInputTag)
+{
+	LAbilitySystemComponent->OnAbilityInputPressed(InInputTag);
 }
 
 

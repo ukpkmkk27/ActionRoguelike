@@ -20,6 +20,11 @@ public:
 	UInputAction* InputAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag GameplayTag;
+
+	bool IsValid() const
+	{
+		return GameplayTag.IsValid() && InputAction;
+	}
 };
 
 /**
@@ -32,8 +37,12 @@ class ACTIONROGUELIKE_API ULDataAsset_InputConfig : public UDataAsset
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputMappingContext* DefaultInputMappingContext;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (TitleProperty= "GameplayTag"))
 	TArray<FLInputConfig> NativeInputActions;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "GameplayTag"))
+	TArray<FLInputConfig> GameAbilityInputActions;
 
 	UInputAction* FindNativeActionByTag(const FGameplayTag& InGameplayTag) const;
 
