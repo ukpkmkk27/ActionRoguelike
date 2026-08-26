@@ -4,25 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "DataAssets/StartUp/LDataAsset_StartUpDataBase.h"
-#include "GameplayTagContainer.h"
+#include "LTypes/LStructTypes.h"
 #include "LDataAsset_HeroStartUpData.generated.h"
 
 
-class ULGameplayAbility;
-
-USTRUCT(BlueprintType)
-struct FLHeroAbilityConfig
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
-	FGameplayTag GameplayTag;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<ULGameplayAbility> AbilityToGrant;
-
-	bool IsValid() const;
-};
 /**
  * 
  */

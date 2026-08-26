@@ -5,15 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interfaces/LPawnCombatInterface.h"
 #include "LBaseCharacter.generated.h"
 
 
 class ULAbilitySystemComponent;
 class ULAttributeSet;
 class ULDataAsset_StartUpDataBase;
+class UILPawnCombatInterface;
+class UPawnCombatComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API ALBaseCharacter : public ACharacter, public IAbilitySystemInterface
+class ACTIONROGUELIKE_API ALBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ILPawnCombatInterface
 {
 	GENERATED_BODY()
 
@@ -24,6 +27,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ End IAbilitySystemInterface Interface
 
+	//~ Begin ILPawnCombatInterface Interface.
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+	//~ End ILPawnCombatInterface Interface
 
 protected:
 	//~ Begin APawn Interface.

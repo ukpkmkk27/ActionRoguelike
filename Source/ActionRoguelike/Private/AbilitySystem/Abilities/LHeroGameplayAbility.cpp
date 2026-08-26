@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/LHeroGameplayAbility.h"
 #include "Characters/LHeroCharacter.h"
 #include "Controllers/LHeroPlayerController.h"
+#include "AbilitySystem/LAbilitySystemComponent.h"
 #include "Components/Combat/HeroCombatComponent.h"
 
 ALHeroCharacter* ULHeroGameplayAbility::GetHeroCharacterFromActorInfo()
@@ -30,4 +31,9 @@ UHeroCombatComponent* ULHeroGameplayAbility::GetHeroCombatComponentFromActorInfo
 {
 	return GetHeroCharacterFromActorInfo()->GetHeroCombatComponent();
 
+}
+
+ULAbilitySystemComponent* ULHeroGameplayAbility::GetLAbilitySystemComponentFromActorInfo()
+{
+	return Cast<ULAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
 }

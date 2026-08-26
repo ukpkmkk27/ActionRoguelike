@@ -4,6 +4,7 @@
 #include "Components/Combat/PawnCombatComponent.h"
 #include "Items/Weapons/LWeaponBase.h"
 #include "LDebugHelper.h"
+#include "Components/BoxComponent.h"
 void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag InWeaponTagToRegister, ALWeaponBase* InWeaponToRegister, bool bRegisterAsEquippedWeapon)
 {
 	checkf(!CharacterCarriedWeaponMap.Contains(InWeaponTagToRegister), TEXT("A tag named: %s has already added as carried weapon map"),*InWeaponTagToRegister.ToString());
@@ -11,8 +12,7 @@ void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag InWeaponTagToRegis
 	
 	CharacterCarriedWeaponMap.Emplace(InWeaponTagToRegister, InWeaponToRegister);
 	if (bRegisterAsEquippedWeapon) CurrentEquippedWeaponTag = InWeaponTagToRegister;
-	const FString WeaponMsg = FString::Printf(TEXT("A weapon named: %s has been registered by tag: %s"), *InWeaponToRegister->GetName(), *InWeaponTagToRegister.ToString());
-	Debug::Print(WeaponMsg);
+
 }
 
 ALWeaponBase* UPawnCombatComponent::GetCharacterCarriedWeaponByTag(FGameplayTag InWeaponTagToGet) const
@@ -31,4 +31,24 @@ ALWeaponBase* UPawnCombatComponent::GetCharacterCarriedWeaponByTag(FGameplayTag 
 ALWeaponBase* UPawnCombatComponent::GetCurrentCharacterEquippedWeapon() const
 {
 	return GetCharacterCarriedWeaponByTag(CurrentEquippedWeaponTag);
+}
+
+void UPawnCombatComponent::ToggleWeaponCollision(bool bEnableCollision, EToggleCollisionType ToggleCollisionType)
+{
+	if (ToggleCollisionType == EToggleCollisionType::CurrentEquippedWeapon)
+	{
+		ALWeaponBase* CurrentWeapon = GetCharacterCarriedWeaponByTag(CurrentEquippedWeaponTag);
+		if (CurrentWeapon)
+		{
+			if (bEnableCollision)
+			{
+				CurrentWeapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			}
+			else
+			{
+				CurrentWeapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			}
+		}
+
+	}
 }

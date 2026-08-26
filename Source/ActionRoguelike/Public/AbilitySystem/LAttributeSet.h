@@ -4,14 +4,47 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+#include "AbilitySystem/LAbilitySystemComponent.h"
 #include "LAttributeSet.generated.h"
 
+
+#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 /**
  * 
  */
+
 UCLASS()
 class ACTIONROGUELIKE_API ULAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-	
+public:
+	ULAttributeSet();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	FGameplayAttributeData CurrentHealth;
+	ATTRIBUTE_ACCESSORS(ULAttributeSet, CurrentHealth)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	FGameplayAttributeData MaxHealth;
+	ATTRIBUTE_ACCESSORS(ULAttributeSet, MaxHealth);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Rage")
+	FGameplayAttributeData CurrentRage;
+	ATTRIBUTE_ACCESSORS(ULAttributeSet, CurrentRage)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Rage")
+	FGameplayAttributeData MaxRage;
+	ATTRIBUTE_ACCESSORS(ULAttributeSet, MaxRage);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
+	FGameplayAttributeData AttackPower;
+	ATTRIBUTE_ACCESSORS(ULAttributeSet, AttackPower);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Damage")
+	FGameplayAttributeData DefensePower;
+	ATTRIBUTE_ACCESSORS(ULAttributeSet, DefensePower);
 };

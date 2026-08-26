@@ -11,6 +11,14 @@ class ALWeaponBase;
 /**
  * 
  */
+UENUM(BlueprintType)
+enum class EToggleCollisionType : uint8
+{
+	CurrentEquippedWeapon,
+	LeftHand,
+	RightHand
+};
+
 UCLASS()
 class ACTIONROGUELIKE_API UPawnCombatComponent : public UPawnExtensionComponentBase
 {
@@ -31,5 +39,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "L|Combat")
 	ALWeaponBase* GetCurrentCharacterEquippedWeapon() const;
 
-
+	UFUNCTION(BlueprintCallable, Category = "L|Combat")
+	void ToggleWeaponCollision(bool bEnableCollision, EToggleCollisionType ToggleCollisionType);
 };

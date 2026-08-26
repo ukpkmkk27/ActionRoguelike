@@ -21,6 +21,9 @@ class ACTIONROGUELIKE_API ALHeroCharacter : public ALBaseCharacter
 	GENERATED_BODY()
 public:
 	ALHeroCharacter();
+	//~ Begin ILPawnCombatInterface Interface.
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+	//~ End ILPawnCombatInterface Interface
 
 protected:
 	//~ Begin APawn Interface.
@@ -43,6 +46,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CharacterData")
 	ULDataAsset_InputConfig* InputConfigDataAsset;
+
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_Jump(const FInputActionValue& InputActionValue);

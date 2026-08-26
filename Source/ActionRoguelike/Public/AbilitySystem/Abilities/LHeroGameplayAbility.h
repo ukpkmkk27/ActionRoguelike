@@ -8,6 +8,7 @@
 
 class ALHeroCharacter;
 class ALHeroPlayerController;
+class ULAbilitySystemComponent;
 /**
  * 
  */
@@ -24,6 +25,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "L|GameAbility")
 	UHeroCombatComponent* GetHeroCombatComponentFromActorInfo();
+
+	UFUNCTION(BlueprintPure, Category = "L|GameAbility")
+	ULAbilitySystemComponent* GetLAbilitySystemComponentFromActorInfo();
 
 private:
 	TWeakObjectPtr<ALHeroCharacter> CachedOwningHeroCharacter;

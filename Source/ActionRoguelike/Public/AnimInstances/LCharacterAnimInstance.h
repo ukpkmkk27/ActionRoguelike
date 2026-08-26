@@ -18,7 +18,7 @@ class ACTIONROGUELIKE_API ULCharacterAnimInstance : public ULBaseAnimInstance
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation_WorkerThread(float DeltaSeconds) override;
-protected:
+public:
 	UPROPERTY()
 	ALBaseCharacter* OwningCharacter;
 	UPROPERTY()

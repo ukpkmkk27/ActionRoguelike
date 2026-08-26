@@ -36,7 +36,7 @@ ALHeroCharacter::ALHeroCharacter()
 	//
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
-	GetCharacterMovement()->MaxWalkSpeed = 400.f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 
 	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
 
@@ -81,6 +81,11 @@ void ALHeroCharacter::PossessedBy(AController* NewController)
 	//	Debug::Print(TEXT("AbilitySystemComponent valid." + ASCText), FColor::Green);
 	//	Debug::Print(TEXT("AttributeSet valid." + ASCText), FColor::Green);
 	//}
+}
+
+UPawnCombatComponent* ALHeroCharacter::GetPawnCombatComponent() const
+{
+	return HeroCombatComponent;
 }
 
 void ALHeroCharacter::Input_Move(const FInputActionValue& InputActionValue)

@@ -2,13 +2,9 @@
 
 
 #include "DataAssets/StartUp/LDataAsset_HeroStartUpData.h"
-#include "AbilitySystem/Abilities/LGameplayAbility.h"
+#include "AbilitySystem/Abilities/LHeroGameplayAbility.h"
 #include "AbilitySystem/LAbilitySystemComponent.h"
 
-bool FLHeroAbilityConfig::IsValid() const
-{
-    return GameplayTag.IsValid()&& AbilityToGrant;
-}
 
 void ULDataAsset_HeroStartUpData::GiveToAbilitySystemComponent(ULAbilitySystemComponent* InASCToGive, int32 ApplyInLevel)
 {
@@ -19,7 +15,7 @@ void ULDataAsset_HeroStartUpData::GiveToAbilitySystemComponent(ULAbilitySystemCo
         FGameplayAbilitySpec GameplayAbilitySpec(HeroAbilityConfig.AbilityToGrant);
         GameplayAbilitySpec.SourceObject = InASCToGive->GetAvatarActor();
         GameplayAbilitySpec.Level = ApplyInLevel;
-        GameplayAbilitySpec.DynamicAbilityTags.AddTag(HeroAbilityConfig.GameplayTag); //By doing this, we can retrive ability by tag. 
+        GameplayAbilitySpec.DynamicAbilityTags.AddTag(HeroAbilityConfig.InputTag); //By doing this, we can retrive ability by tag. 
 
         InASCToGive->GiveAbility(GameplayAbilitySpec);
 
